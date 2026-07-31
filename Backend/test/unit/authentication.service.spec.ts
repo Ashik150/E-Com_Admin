@@ -3,12 +3,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../src/errors/api-error.js";
 import type { AccessUserRepository } from "../../src/modules/auth/access-user.repository.js";
 import { AuthenticationService } from "../../src/modules/auth/authentication.service.js";
+import type { RefreshSessionRepository } from "../../src/modules/auth/refresh-session.repository.js";
 
 const userId = "44444444-4444-4444-8444-444444444444";
 const tokenConfiguration = {
   secret: "unit-test-access-secret-with-at-least-32-characters",
   issuer: "trends-bird-api",
   audience: "trends-bird-dashboard",
+  accessTtlSeconds: 900,
+  refreshTtlDays: 14,
 };
 const activeUser = {
   id: userId,
@@ -26,8 +29,18 @@ const activeUser = {
 
 describe("AuthenticationService", () => {
   const findById = vi.fn();
-  const repository = { findById } as AccessUserRepository;
-  const service = new AuthenticationService(repository, tokenConfiguration);
+  const findByEmail = vi.fn();
+  const repository = { findById, findByEmail } as AccessUserRepository;
+  const sessions = {
+    create: vi.fn(),
+    rotate: vi.fn(),
+    revoke: vi.fn(),
+  } as unknown as RefreshSessionRepository;
+  const service = new AuthenticationService(
+    repository,
+    sessions,
+    tokenConfiguration,
+  );
 
   beforeEach(() => {
     vi.clearAllMocks();

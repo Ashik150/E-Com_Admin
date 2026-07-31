@@ -25,3 +25,7 @@ export interface AccessUserRecord {
     permissions: string[];
   };
 }
+
+export interface LoginUserRecord extends AccessUserRecord {
+  passwordHash: string;
+}

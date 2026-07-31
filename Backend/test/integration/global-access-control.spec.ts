@@ -5,6 +5,7 @@ import { createApp } from "../../src/app.js";
 import type { AppConfig } from "../../src/config/environment.js";
 import type { AccessUserRepository } from "../../src/modules/auth/access-user.repository.js";
 import { AuthenticationService } from "../../src/modules/auth/authentication.service.js";
+import type { RefreshSessionRepository } from "../../src/modules/auth/refresh-session.repository.js";
 
 const userId = "44444444-4444-4444-8444-444444444444";
 const config: AppConfig = {
@@ -15,15 +16,26 @@ const config: AppConfig = {
   JWT_ACCESS_SECRET: "integration-secret-with-at-least-32-characters",
   JWT_ACCESS_ISSUER: "trends-bird-api",
   JWT_ACCESS_AUDIENCE: "trends-bird-dashboard",
+  JWT_ACCESS_TTL_SECONDS: 900,
+  REFRESH_TOKEN_TTL_DAYS: 14,
+  COOKIE_SECURE: false,
 };
 
 describe("Express global access control", () => {
   const findById = vi.fn();
-  const repository = { findById } as AccessUserRepository;
-  const authentication = new AuthenticationService(repository, {
+  const findByEmail = vi.fn();
+  const repository = { findById, findByEmail } as AccessUserRepository;
+  const sessions = {
+    create: vi.fn(),
+    rotate: vi.fn(),
+    revoke: vi.fn(),
+  } as unknown as RefreshSessionRepository;
+  const authentication = new AuthenticationService(repository, sessions, {
     secret: config.JWT_ACCESS_SECRET,
     issuer: config.JWT_ACCESS_ISSUER,
     audience: config.JWT_ACCESS_AUDIENCE,
+    accessTtlSeconds: config.JWT_ACCESS_TTL_SECONDS,
+    refreshTtlDays: config.REFRESH_TOKEN_TTL_DAYS,
   });
   const app = createApp({ config, authentication });
 

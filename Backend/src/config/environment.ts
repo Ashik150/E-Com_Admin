@@ -10,6 +10,12 @@ const environmentSchema = z.object({
   JWT_ACCESS_SECRET: z.string().min(32),
   JWT_ACCESS_ISSUER: z.string().min(1),
   JWT_ACCESS_AUDIENCE: z.string().min(1),
+  JWT_ACCESS_TTL_SECONDS: z.coerce.number().int().min(600).max(900).default(900),
+  REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().min(7).max(30).default(14),
+  COOKIE_SECURE: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
 });
 
 export type AppConfig = z.infer<typeof environmentSchema>;

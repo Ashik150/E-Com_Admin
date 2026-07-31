@@ -4,14 +4,18 @@ import { loadEnvironment } from "./config/environment.js";
 import { createPrismaClient } from "./database/prisma.js";
 import { PrismaAccessUserRepository } from "./modules/auth/access-user.repository.js";
 import { AuthenticationService } from "./modules/auth/authentication.service.js";
+import { PrismaRefreshSessionRepository } from "./modules/auth/refresh-session.repository.js";
 
 const config = loadEnvironment();
 const database = createPrismaClient(config.DATABASE_URL);
 const users = new PrismaAccessUserRepository(database);
-const authentication = new AuthenticationService(users, {
+const sessions = new PrismaRefreshSessionRepository(database);
+const authentication = new AuthenticationService(users, sessions, {
   secret: config.JWT_ACCESS_SECRET,
   issuer: config.JWT_ACCESS_ISSUER,
   audience: config.JWT_ACCESS_AUDIENCE,
+  accessTtlSeconds: config.JWT_ACCESS_TTL_SECONDS,
+  refreshTtlDays: config.REFRESH_TOKEN_TTL_DAYS,
 });
 const app = createApp({ config, authentication });
 const server = app.listen(config.PORT, () => {

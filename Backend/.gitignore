@@ -12,6 +12,9 @@ coverage/
 test-results/
 .vitest/
 
+# Test source
+/test/
+
 # Logs and local tooling
 *.log
 .cache/

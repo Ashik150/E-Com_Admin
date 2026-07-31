@@ -19,6 +19,20 @@ export class ApiError extends Error {
     });
   }
 
+  static invalidCredentials(): ApiError {
+    return new ApiError(401, "INVALID_CREDENTIALS", "Invalid email or password");
+  }
+
+  static csrfValidationFailed(): ApiError {
+    return new ApiError(403, "CSRF_VALIDATION_FAILED", "CSRF validation failed");
+  }
+
+  static validation(details: unknown): ApiError {
+    return new ApiError(422, "VALIDATION_ERROR", "Validation failed", {
+      details,
+    });
+  }
+
   static notFound(): ApiError {
     return new ApiError(404, "NOT_FOUND", "Route not found");
   }
