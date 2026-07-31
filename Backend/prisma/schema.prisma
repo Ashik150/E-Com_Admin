@@ -11,3 +11,75 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum RoleStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String
+  email        String    @unique
+  passwordHash String
+  active       Boolean   @default(true)
+  roleId       String    @db.Uuid
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  role         Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@index([roleId])
+  @@index([active, deletedAt])
+  @@map("users")
+}
+
+model Role {
+  id          String           @id @default(uuid()) @db.Uuid
+  name        String           @unique
+  description String?
+  status      RoleStatus       @default(ACTIVE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  users       User[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model PermissionGroup {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @unique
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  permissions Permission[]
+
+  @@map("permission_groups")
+}
+
+model Permission {
+  id          String           @id @default(uuid()) @db.Uuid
+  name        String           @unique
+  description String?
+  groupId     String           @db.Uuid
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  group       PermissionGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  roles       RolePermission[]
+
+  @@index([groupId])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String     @db.Uuid
+  permissionId String     @db.Uuid
+  assignedAt   DateTime   @default(now())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}

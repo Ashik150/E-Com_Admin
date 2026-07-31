@@ -9,6 +9,8 @@ node_modules/
 /generated/prisma/
 dist/
 coverage/
+test-results/
+.vitest/
 
 # Logs and local tooling
 *.log

@@ -17,6 +17,8 @@ pnpm-debug.log*
 dist/
 build/
 coverage/
+test-results/
+.vitest/
 .cache/
 .tmp/
 
