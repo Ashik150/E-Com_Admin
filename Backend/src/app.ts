@@ -1,7 +1,7 @@
+import { createRequire } from "node:module";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import express, { type Express } from "express";
-import * as helmetModule from "helmet";
+import express, { type Express, type RequestHandler } from "express";
 import type { AppConfig } from "./config/environment.js";
 import { authenticate } from "./middleware/authenticate.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
@@ -27,6 +27,8 @@ import { createCategoryRouter } from "./routes/category.routes.js";
 import { createBrandRouter } from "./routes/brand.routes.js";
 import { createAttributeRouter } from "./routes/attribute.routes.js";
 import { createProductRouter } from "./routes/product.routes.js";
+
+const helmet = createRequire(import.meta.url)("helmet") as () => RequestHandler;
 
 export interface AppDependencies {
   config: AppConfig;
@@ -58,7 +60,7 @@ export function createApp({
   const app = express();
 
   app.disable("x-powered-by");
-  app.use(helmetModule.default());
+  app.use(helmet());
   app.use(
     cors({
       origin: config.FRONTEND_URL,
