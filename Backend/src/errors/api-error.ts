@@ -33,7 +33,11 @@ export class ApiError extends Error {
     });
   }
 
-  static notFound(): ApiError {
-    return new ApiError(404, "NOT_FOUND", "Route not found");
+  static notFound(message = "Route not found"): ApiError {
+    return new ApiError(404, "NOT_FOUND", message);
+  }
+
+  static conflict(message: string): ApiError {
+    return new ApiError(409, "CONFLICT", message);
   }
 }

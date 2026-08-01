@@ -5,6 +5,9 @@ import { createPrismaClient } from "./database/prisma.js";
 import { PrismaAccessUserRepository } from "./modules/auth/access-user.repository.js";
 import { AuthenticationService } from "./modules/auth/authentication.service.js";
 import { PrismaRefreshSessionRepository } from "./modules/auth/refresh-session.repository.js";
+import { PermissionService } from "./modules/permission/permission.service.js";
+import { RoleService } from "./modules/role/role.service.js";
+import { UserService } from "./modules/user/user.service.js";
 
 const config = loadEnvironment();
 const database = createPrismaClient(config.DATABASE_URL);
@@ -17,7 +20,13 @@ const authentication = new AuthenticationService(users, sessions, {
   accessTtlSeconds: config.JWT_ACCESS_TTL_SECONDS,
   refreshTtlDays: config.REFRESH_TOKEN_TTL_DAYS,
 });
-const app = createApp({ config, authentication });
+const app = createApp({
+  config,
+  authentication,
+  permissions: new PermissionService(database),
+  roles: new RoleService(database),
+  users: new UserService(database),
+});
 const server = app.listen(config.PORT, () => {
   console.info(`API listening on port ${config.PORT}`);
 });

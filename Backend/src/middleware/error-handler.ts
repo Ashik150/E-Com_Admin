@@ -11,9 +11,16 @@ export const errorHandler: ErrorRequestHandler = (
   response,
   _next,
 ) => {
+  const databaseConflict =
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error.code === "P2002" || error.code === "P2003");
   const apiError =
     error instanceof ApiError
       ? error
+      : databaseConflict
+        ? ApiError.conflict("The record conflicts with existing data")
       : new ApiError(500, "INTERNAL_SERVER_ERROR", "Internal server error");
 
   response.status(apiError.statusCode).json({
