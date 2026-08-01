@@ -24,6 +24,11 @@ enum Gender {
   PREFER_NOT_TO_SAY
 }
 
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
 model User {
   id              String           @id @default(uuid()) @db.Uuid
   name            String
@@ -39,10 +44,35 @@ model User {
   updatedAt       DateTime         @updatedAt
   role            Role             @relation(fields: [roleId], references: [id], onDelete: Restrict)
   refreshSessions RefreshSession[]
+  mediaAssets     MediaAsset[]
 
   @@index([roleId])
   @@index([active, deletedAt])
   @@map("users")
+}
+
+model MediaAsset {
+  id            String    @id @default(uuid()) @db.Uuid
+  fileName      String
+  storedPath    String    @unique
+  publicUrl     String
+  mimeType      String
+  type          MediaType
+  size          Int
+  width         Int?
+  height        Int?
+  thumbnailPath String?   @unique
+  thumbnailUrl  String?
+  altText       String?
+  title         String?
+  uploadedById  String    @db.Uuid
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  uploadedBy    User      @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([uploadedById])
+  @@index([type, createdAt])
+  @@map("media_assets")
 }
 
 model Role {

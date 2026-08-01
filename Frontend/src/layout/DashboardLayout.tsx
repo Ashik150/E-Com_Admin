@@ -4,6 +4,7 @@ import GroupOutlined from '@mui/icons-material/GroupOutlined'
 import LogoutOutlined from '@mui/icons-material/LogoutOutlined'
 import MenuOutlined from '@mui/icons-material/MenuOutlined'
 import SecurityOutlined from '@mui/icons-material/SecurityOutlined'
+import PermMediaOutlined from '@mui/icons-material/PermMediaOutlined'
 import {
   AppBar,
   Avatar,
@@ -33,6 +34,7 @@ export function DashboardLayout() {
     { label: 'Permissions', path: '/permissions', permission: 'permission:watch', icon: <SecurityOutlined /> },
     { label: 'Roles', path: '/roles', permission: 'role:watch', icon: <AdminPanelSettingsOutlined /> },
     { label: 'Users', path: '/users', permission: 'user:watch', icon: <GroupOutlined /> },
+    { label: 'Media', path: '/media', permission: 'media:watch', icon: <PermMediaOutlined /> },
   ].filter((entry) => hasPermission(entry.permission))
 
   const drawer = (

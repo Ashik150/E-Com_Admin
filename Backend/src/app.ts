@@ -9,6 +9,7 @@ import type { AuthenticationService } from "./modules/auth/authentication.servic
 import type { PermissionService } from "./modules/permission/permission.service.js";
 import type { RoleService } from "./modules/role/role.service.js";
 import type { UserService } from "./modules/user/user.service.js";
+import type { MediaService } from "./modules/media/media.service.js";
 import {
   createProtectedAuthRouter,
   createPublicAuthRouter,
@@ -17,6 +18,7 @@ import { createDashboardRouter } from "./routes/dashboard.routes.js";
 import { createPermissionRouter } from "./routes/permission.routes.js";
 import { createRoleRouter } from "./routes/role.routes.js";
 import { createUserRouter } from "./routes/user.routes.js";
+import { createMediaRouter } from "./routes/media.routes.js";
 
 export interface AppDependencies {
   config: AppConfig;
@@ -24,6 +26,8 @@ export interface AppDependencies {
   permissions?: PermissionService;
   roles?: RoleService;
   users?: UserService;
+  media?: MediaService;
+  mediaStorageDirectory?: string;
 }
 
 export function createApp({
@@ -32,6 +36,8 @@ export function createApp({
   permissions,
   roles,
   users,
+  media,
+  mediaStorageDirectory,
 }: AppDependencies): Express {
   const app = express();
 
@@ -46,6 +52,28 @@ export function createApp({
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
 
+  if (mediaStorageDirectory) {
+    app.use(
+      "/uploads",
+      express.static(mediaStorageDirectory, {
+        dotfiles: "deny",
+        index: false,
+        immutable: true,
+        maxAge: "1y",
+        setHeaders(response) {
+          response.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+          response.setHeader("X-Content-Type-Options", "nosniff");
+        },
+      }),
+      (_request, response) => {
+        response.status(404).json({
+          success: false,
+          error: { statusCode: 404, code: "NOT_FOUND", message: "File not found" },
+        });
+      },
+    );
+  }
+
   // Login, refresh, and logout will be mounted on this router before the
   // authentication middleware. No other router may be mounted here.
   app.use("/api/v1/auth", createPublicAuthRouter(authentication, config));
@@ -57,6 +85,7 @@ export function createApp({
   if (permissions) app.use("/api/v1/permissions", createPermissionRouter(permissions));
   if (roles) app.use("/api/v1/roles", createRoleRouter(roles));
   if (users) app.use("/api/v1/users", createUserRouter(users));
+  if (media) app.use("/api/v1/media", createMediaRouter(media));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

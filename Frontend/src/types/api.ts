@@ -69,3 +69,22 @@ export interface User {
   createdAt: string
   updatedAt: string
 }
+
+export interface MediaAsset {
+  id: string
+  fileName: string
+  storedPath: string
+  publicUrl: string
+  mimeType: string
+  type: 'IMAGE' | 'VIDEO'
+  size: number
+  width: number | null
+  height: number | null
+  thumbnailPath: string | null
+  thumbnailUrl: string | null
+  altText: string | null
+  title: string | null
+  uploadedBy: { id: string; name: string; email: string }
+  createdAt: string
+  updatedAt: string
+}

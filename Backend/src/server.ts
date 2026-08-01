@@ -8,9 +8,12 @@ import { PrismaRefreshSessionRepository } from "./modules/auth/refresh-session.r
 import { PermissionService } from "./modules/permission/permission.service.js";
 import { RoleService } from "./modules/role/role.service.js";
 import { UserService } from "./modules/user/user.service.js";
+import { MediaService } from "./modules/media/media.service.js";
+import { loadMediaConfig } from "./config/media.js";
 
 const config = loadEnvironment();
 const database = createPrismaClient(config.DATABASE_URL);
+const mediaConfig = loadMediaConfig();
 const users = new PrismaAccessUserRepository(database);
 const sessions = new PrismaRefreshSessionRepository(database);
 const authentication = new AuthenticationService(users, sessions, {
@@ -26,6 +29,8 @@ const app = createApp({
   permissions: new PermissionService(database),
   roles: new RoleService(database),
   users: new UserService(database),
+  media: new MediaService(database, mediaConfig),
+  mediaStorageDirectory: mediaConfig.storageDirectory,
 });
 const server = app.listen(config.PORT, () => {
   console.info(`API listening on port ${config.PORT}`);
