@@ -1,7 +1,7 @@
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import express, { type Express } from "express";
-import helmet from "helmet";
+import * as helmetModule from "helmet";
 import type { AppConfig } from "./config/environment.js";
 import { authenticate } from "./middleware/authenticate.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
@@ -58,7 +58,7 @@ export function createApp({
   const app = express();
 
   app.disable("x-powered-by");
-  app.use(helmet());
+  app.use(helmetModule.default());
   app.use(
     cors({
       origin: config.FRONTEND_URL,
