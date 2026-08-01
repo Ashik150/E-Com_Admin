@@ -52,27 +52,49 @@ model User {
 }
 
 model MediaAsset {
-  id            String    @id @default(uuid()) @db.Uuid
+  id            String     @id @default(uuid()) @db.Uuid
   fileName      String
-  storedPath    String    @unique
+  storedPath    String     @unique
   publicUrl     String
   mimeType      String
   type          MediaType
   size          Int
   width         Int?
   height        Int?
-  thumbnailPath String?   @unique
+  thumbnailPath String?    @unique
   thumbnailUrl  String?
   altText       String?
   title         String?
-  uploadedById  String    @db.Uuid
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  uploadedBy    User      @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+  uploadedById  String     @db.Uuid
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  uploadedBy    User       @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+  categories    Category[]
 
   @@index([uploadedById])
   @@index([type, createdAt])
   @@map("media_assets")
+}
+
+model Category {
+  id          String      @id @default(uuid()) @db.Uuid
+  name        String
+  slug        String      @unique
+  description String?
+  imageId     String?     @db.Uuid
+  parentId    String?     @db.Uuid
+  active      Boolean     @default(true)
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  image       MediaAsset? @relation(fields: [imageId], references: [id], onDelete: Restrict)
+  parent      Category?   @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children    Category[]  @relation("CategoryTree")
+
+  @@index([parentId, sortOrder])
+  @@index([active, sortOrder])
+  @@index([imageId])
+  @@map("categories")
 }
 
 model Role {

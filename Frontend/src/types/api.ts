@@ -88,3 +88,27 @@ export interface MediaAsset {
   createdAt: string
   updatedAt: string
 }
+
+export interface CategoryImage {
+  id: string
+  fileName: string
+  publicUrl: string
+  thumbnailUrl: string | null
+  altText: string | null
+  title: string | null
+}
+
+export interface CategoryNode {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  imageId: string | null
+  parentId: string | null
+  active: boolean
+  sortOrder: number
+  image: CategoryImage | null
+  children: CategoryNode[]
+  createdAt: string
+  updatedAt: string
+}

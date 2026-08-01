@@ -10,6 +10,7 @@ import type { PermissionService } from "./modules/permission/permission.service.
 import type { RoleService } from "./modules/role/role.service.js";
 import type { UserService } from "./modules/user/user.service.js";
 import type { MediaService } from "./modules/media/media.service.js";
+import type { CategoryService } from "./modules/category/category.service.js";
 import {
   createProtectedAuthRouter,
   createPublicAuthRouter,
@@ -19,6 +20,7 @@ import { createPermissionRouter } from "./routes/permission.routes.js";
 import { createRoleRouter } from "./routes/role.routes.js";
 import { createUserRouter } from "./routes/user.routes.js";
 import { createMediaRouter } from "./routes/media.routes.js";
+import { createCategoryRouter } from "./routes/category.routes.js";
 
 export interface AppDependencies {
   config: AppConfig;
@@ -28,6 +30,7 @@ export interface AppDependencies {
   users?: UserService;
   media?: MediaService;
   mediaStorageDirectory?: string;
+  categories?: CategoryService;
 }
 
 export function createApp({
@@ -38,6 +41,7 @@ export function createApp({
   users,
   media,
   mediaStorageDirectory,
+  categories,
 }: AppDependencies): Express {
   const app = express();
 
@@ -86,6 +90,7 @@ export function createApp({
   if (roles) app.use("/api/v1/roles", createRoleRouter(roles));
   if (users) app.use("/api/v1/users", createUserRouter(users));
   if (media) app.use("/api/v1/media", createMediaRouter(media));
+  if (categories) app.use("/api/v1/categories", createCategoryRouter(categories));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

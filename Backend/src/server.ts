@@ -10,6 +10,7 @@ import { RoleService } from "./modules/role/role.service.js";
 import { UserService } from "./modules/user/user.service.js";
 import { MediaService } from "./modules/media/media.service.js";
 import { loadMediaConfig } from "./config/media.js";
+import { CategoryService } from "./modules/category/category.service.js";
 
 const config = loadEnvironment();
 const database = createPrismaClient(config.DATABASE_URL);
@@ -31,6 +32,7 @@ const app = createApp({
   users: new UserService(database),
   media: new MediaService(database, mediaConfig),
   mediaStorageDirectory: mediaConfig.storageDirectory,
+  categories: new CategoryService(database),
 });
 const server = app.listen(config.PORT, () => {
   console.info(`API listening on port ${config.PORT}`);

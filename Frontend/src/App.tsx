@@ -11,6 +11,7 @@ import { PermissionPage } from './pages/PermissionPage'
 import { RolePage } from './pages/RolePage'
 import { UserPage } from './pages/UserPage'
 import { MediaPage } from './pages/MediaPage'
+import { CategoryPage } from './pages/CategoryPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +45,7 @@ export default function App() {
                 <Route path="roles" element={<PermissionRoute permission="role:watch"><RolePage /></PermissionRoute>} />
                 <Route path="users" element={<PermissionRoute permission="user:watch"><UserPage /></PermissionRoute>} />
                 <Route path="media" element={<PermissionRoute permission="media:watch"><MediaPage /></PermissionRoute>} />
+                <Route path="categories" element={<PermissionRoute permission="category:watch"><CategoryPage /></PermissionRoute>} />
                 <Route path="forbidden" element={<ForbiddenPage />} />
               </Route>
               <Route path="*" element={<ForbiddenPage />} />
