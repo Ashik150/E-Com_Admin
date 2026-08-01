@@ -112,3 +112,46 @@ export interface CategoryNode {
   createdAt: string
   updatedAt: string
 }
+
+export interface Brand {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  logoId: string | null
+  status: 'ACTIVE' | 'INACTIVE'
+  logo: CategoryImage | null
+  createdAt: string
+  updatedAt: string
+}
+
+export type AttributeType =
+  | 'DROPDOWN'
+  | 'RADIO'
+  | 'CHECKBOX'
+  | 'COLOR_SWATCH'
+  | 'IMAGE_SWATCH'
+
+export interface AttributeValue {
+  id: string
+  attributeId: string
+  value: string
+  slug: string
+  colorValue: string | null
+  imageId: string | null
+  sortOrder: number
+  image: CategoryImage | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Attribute {
+  id: string
+  name: string
+  slug: string
+  type: AttributeType
+  valueCount?: number
+  values?: AttributeValue[]
+  createdAt: string
+  updatedAt: string
+}

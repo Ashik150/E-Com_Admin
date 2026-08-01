@@ -11,6 +11,8 @@ import { UserService } from "./modules/user/user.service.js";
 import { MediaService } from "./modules/media/media.service.js";
 import { loadMediaConfig } from "./config/media.js";
 import { CategoryService } from "./modules/category/category.service.js";
+import { BrandService } from "./modules/brand/brand.service.js";
+import { AttributeService } from "./modules/attribute/attribute.service.js";
 
 const config = loadEnvironment();
 const database = createPrismaClient(config.DATABASE_URL);
@@ -33,6 +35,8 @@ const app = createApp({
   media: new MediaService(database, mediaConfig),
   mediaStorageDirectory: mediaConfig.storageDirectory,
   categories: new CategoryService(database),
+  brands: new BrandService(database),
+  attributes: new AttributeService(database),
 });
 const server = app.listen(config.PORT, () => {
   console.info(`API listening on port ${config.PORT}`);
