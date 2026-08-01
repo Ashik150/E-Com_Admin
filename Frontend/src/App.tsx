@@ -14,6 +14,8 @@ import { MediaPage } from './pages/MediaPage'
 import { CategoryPage } from './pages/CategoryPage'
 import { BrandPage } from './pages/BrandPage'
 import { AttributePage } from './pages/AttributePage'
+import { ProductPage } from './pages/ProductPage'
+import { ProductFormPage } from './pages/ProductFormPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +52,9 @@ export default function App() {
                 <Route path="categories" element={<PermissionRoute permission="category:watch"><CategoryPage /></PermissionRoute>} />
                 <Route path="brands" element={<PermissionRoute permission="brand:watch"><BrandPage /></PermissionRoute>} />
                 <Route path="attributes" element={<PermissionRoute permission="attribute:watch"><AttributePage /></PermissionRoute>} />
+                <Route path="products" element={<PermissionRoute permission="product:watch"><ProductPage /></PermissionRoute>} />
+                <Route path="products/new" element={<PermissionRoute permission="product:create"><ProductFormPage /></PermissionRoute>} />
+                <Route path="products/:id/edit" element={<PermissionRoute permission="product:update"><ProductFormPage /></PermissionRoute>} />
                 <Route path="forbidden" element={<ForbiddenPage />} />
               </Route>
               <Route path="*" element={<ForbiddenPage />} />

@@ -8,6 +8,7 @@ import PermMediaOutlined from '@mui/icons-material/PermMediaOutlined'
 import AccountTreeOutlined from '@mui/icons-material/AccountTreeOutlined'
 import BrandingWatermarkOutlined from '@mui/icons-material/BrandingWatermarkOutlined'
 import TuneOutlined from '@mui/icons-material/TuneOutlined'
+import Inventory2Outlined from '@mui/icons-material/Inventory2Outlined'
 import {
   AppBar,
   Avatar,
@@ -41,6 +42,7 @@ export function DashboardLayout() {
     { label: 'Categories', path: '/categories', permission: 'category:watch', icon: <AccountTreeOutlined /> },
     { label: 'Brands', path: '/brands', permission: 'brand:watch', icon: <BrandingWatermarkOutlined /> },
     { label: 'Attributes', path: '/attributes', permission: 'attribute:watch', icon: <TuneOutlined /> },
+    { label: 'Products', path: '/products', permission: 'product:watch', icon: <Inventory2Outlined /> },
   ].filter((entry) => hasPermission(entry.permission))
 
   const drawer = (

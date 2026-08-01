@@ -13,6 +13,7 @@ import type { MediaService } from "./modules/media/media.service.js";
 import type { CategoryService } from "./modules/category/category.service.js";
 import type { BrandService } from "./modules/brand/brand.service.js";
 import type { AttributeService } from "./modules/attribute/attribute.service.js";
+import type { ProductService } from "./modules/product/product.service.js";
 import {
   createProtectedAuthRouter,
   createPublicAuthRouter,
@@ -25,6 +26,7 @@ import { createMediaRouter } from "./routes/media.routes.js";
 import { createCategoryRouter } from "./routes/category.routes.js";
 import { createBrandRouter } from "./routes/brand.routes.js";
 import { createAttributeRouter } from "./routes/attribute.routes.js";
+import { createProductRouter } from "./routes/product.routes.js";
 
 export interface AppDependencies {
   config: AppConfig;
@@ -37,6 +39,7 @@ export interface AppDependencies {
   categories?: CategoryService;
   brands?: BrandService;
   attributes?: AttributeService;
+  products?: ProductService;
 }
 
 export function createApp({
@@ -50,6 +53,7 @@ export function createApp({
   categories,
   brands,
   attributes,
+  products,
 }: AppDependencies): Express {
   const app = express();
 
@@ -101,6 +105,7 @@ export function createApp({
   if (categories) app.use("/api/v1/categories", createCategoryRouter(categories));
   if (brands) app.use("/api/v1/brands", createBrandRouter(brands));
   if (attributes) app.use("/api/v1/attributes", createAttributeRouter(attributes));
+  if (products) app.use("/api/v1/products", createProductRouter(products));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

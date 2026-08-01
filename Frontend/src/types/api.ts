@@ -141,8 +141,98 @@ export interface AttributeValue {
   imageId: string | null
   sortOrder: number
   image: CategoryImage | null
+  media?: ProductMediaReference[]
   createdAt: string
   updatedAt: string
+}
+
+export type StockStatus = 'IN_STOCK' | 'LOW_STOCK' | 'OUT_OF_STOCK'
+
+export interface ProductMediaReference extends CategoryImage {
+  type: 'IMAGE' | 'VIDEO'
+}
+
+export interface ProductListItem {
+  id: string
+  name: string
+  slug: string
+  sku: string | null
+  hasVariants: boolean
+  active: boolean
+  featured: boolean
+  brand: { id: string; name: string } | null
+  categories: Array<{ id: string; name: string }>
+  thumbnail: ProductMediaReference | null
+  priceMin: number
+  priceMax: number
+  stock: number
+  stockStatus: StockStatus
+  createdAt: string
+}
+
+export interface ProductMediaAttachment {
+  mediaId: string
+  isThumbnail: boolean
+  isGallery: boolean
+  sortOrder: number
+  asset: ProductMediaReference
+}
+
+export interface ProductVariantValue {
+  id: string
+  attributeId: string
+  attribute: Attribute
+  value: string
+  slug: string
+  colorValue: string | null
+  image: ProductMediaReference | null
+  media: ProductMediaReference[]
+}
+
+export interface ProductVariant {
+  id: string
+  sku: string
+  price: number
+  salePrice: number | null
+  stock: number
+  stockStatus: StockStatus
+  lowStockThreshold: number
+  weight: number | null
+  active: boolean
+  purchasable: boolean
+  values: ProductVariantValue[]
+  media: ProductMediaAttachment[]
+}
+
+export interface Product {
+  id: string
+  name: string
+  slug: string
+  sku: string | null
+  shortDescription: string | null
+  longDescription: string | null
+  hasVariants: boolean
+  price: number | null
+  salePrice: number | null
+  stock: number | null
+  stockStatus: StockStatus | null
+  weight: number | null
+  active: boolean
+  featured: boolean
+  sortOrder: number
+  brandId: string | null
+  brand: Brand | null
+  categories: CategoryNode[]
+  media: ProductMediaAttachment[]
+  variants: ProductVariant[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ProductFormOptions {
+  brands: Array<{ id: string; name: string }>
+  categories: Array<{ id: string; name: string; parentId: string | null }>
+  attributes: Array<Attribute & { values: AttributeValue[] }>
 }
 
 export interface Attribute {
